@@ -1,5 +1,5 @@
 ---
-title: "Relatório"
+title: "Relatório Longitude -45"
 author: "Pedro"
 date: "07/04/2022"
 output: html_document
@@ -80,8 +80,6 @@ coord_54_45_jan_min <- coord_54_45 %>% filter(month_54_45==1) %>% select(TminJFM
 coord_54_45_fev_min <- coord_54_45 %>% filter(month_54_45==2) %>% select(TminJFM, month_54_45, year_54_45)
 coord_54_45_mar_min <- coord_54_45 %>% filter(month_54_45==3) %>% select(TminJFM, month_54_45, year_54_45)
 coord_54_45_mean_min <- coord_54_45 %>% select(TminJFM, month_54_45, year_54_45) %>% group_by(year_54_45) %>% summarise(mean(TminJFM))
-
-
 ```
 
 ## Mann-Kendall
@@ -142,28 +140,89 @@ sens.slope(coord_54_45_mean_min$`mean(TminJFM)`)
 ## Plots
 
 ```{r , echo=FALSE}
-plot(coord_69_45_jun_min$year_69_45, coord_69_45_jun_min$TminJJA, t="l")
-plot(coord_69_45_jul_min$year_69_45, coord_69_45_jul_min$TminJJA, t="l")
-plot(coord_69_45_ago_min$year_69_45, coord_69_45_ago_min$TminJJA, t="l")
-plot(coord_69_45_mean_min$year_69_45, coord_69_45_mean_min$`mean(TminJJA)`, t="l")
+plot(coord_69_45_jun_min$year_69_45, coord_69_45_jun_min$TminJJA, t="l",
+     main=paste(sens.slope(coord_69_45_jun_min$TminJJA)$estimates, sens.slope(coord_69_45_jun_min$TminJJA)$p.value))
 
-plot(coord_65_45_jan_min$year_1_65_45, coord_65_45_jan_min$TminJFM, t="l")
-plot(coord_65_45_fev_min$year_1_65_45, coord_65_45_fev_min$TminJFM, t="l")
-plot(coord_65_45_mar_min$year_1_65_45, coord_65_45_mar_min$TminJFM, t="l")
-plot(coord_65_45_mean_min$year_1_65_45, coord_65_45_mean_min$`mean(TminJFM)`, t="l")
+plot(coord_69_45_jul_min$year_69_45, coord_69_45_jul_min$TminJJA, t="l",
+     main=paste(sens.slope(coord_69_45_jul_min$TminJJA)$estimates, sens.slope(coord_69_45_jul_min$TminJJA)$p.value))
 
-plot(coord_65_45_abr_max$year_abr,coord_65_45_abr_max$tmax_abr,t="l")
+plot(coord_69_45_ago_min$year_69_45, coord_69_45_ago_min$TminJJA, t="l",
+     main=paste(sens.slope(coord_69_45_ago_min$TminJJA)$estimates, sens.slope(coord_69_45_ago_min$TminJJA)$p.value))
 
-plot(coord_65_45_jul_min$year_jul,coord_65_45_jul_min$tmin_jul,t="l")
+plot(coord_69_45_mean_min$year_69_45, coord_69_45_mean_min$`mean(TminJJA)`, t="l",
+     main=paste(sens.slope(coord_69_45_mean_min$`mean(TminJJA)`)$estimates, 
+                sens.slope(coord_69_45_mean_min$`mean(TminJJA)`)$p.value))
 
-plot(coord_65_45_nov_max$year_nov,coord_65_45_nov_max$tmax_nov,t="l")
+plot(coord_65_45_jan_min$year_1_65_45, coord_65_45_jan_min$TminJFM, t="l",
+     main=paste(
+       sens.slope(coord_65_45_jan_min$TminJFM)$estimates, 
+       sens.slope(coord_65_45_jan_min$TminJFM)$p.value)
+     )
 
-plot(coord_60_45_fev_min$year_fev, coord_60_45_fev_min$tmin_fev, t="l")
+plot(coord_65_45_fev_min$year_1_65_45, coord_65_45_fev_min$TminJFM, t="l",
+     main=paste(
+       sens.slope(coord_65_45_fev_min$TminJFM)$estimates, 
+       sens.slope(coord_65_45_fev_min$TminJFM)$p.value)
+     )
 
-plot(coord_54_45_jan_min$year_54_45, coord_54_45_jan_min$TminJFM, t="l")
-plot(coord_54_45_fev_min$year_54_45, coord_54_45_fev_min$TminJFM, t="l")
-plot(coord_54_45_mar_min$year_54_45, coord_54_45_mar_min$TminJFM, t="l")
-plot(coord_54_45_mean_min$year_54_45, coord_54_45_mean_min$`mean(TminJFM)`, t="l")
+plot(coord_65_45_mar_min$year_1_65_45, coord_65_45_mar_min$TminJFM, t="l",
+     main=paste(
+       sens.slope(coord_65_45_mar_min$TminJFM)$estimates, 
+       sens.slope(coord_65_45_mar_min$TminJFM)$p.value)
+     )
+plot(coord_65_45_mean_min$year_1_65_45, coord_65_45_mean_min$`mean(TminJFM)`, t="l",
+     main=paste(
+       sens.slope(coord_65_45_mean_min$`mean(TminJFM)`)$estimates, 
+       sens.slope(coord_65_45_mean_min$`mean(TminJFM)`)$p.value)
+     )
+
+plot(coord_65_45_abr_max$year_abr,coord_65_45_abr_max$tmax_abr,t="l",
+     main=paste(
+       sens.slope(coord_65_45_abr_max$tmax_abr)$estimates, 
+       sens.slope(coord_65_45_abr_max$tmax_abr)$p.value)
+     )
+
+plot(coord_65_45_jul_min$year_jul,coord_65_45_jul_min$tmin_jul,t="l",
+     main=paste(
+       sens.slope(coord_65_45_jul_min$tmin_jul)$estimates, 
+       sens.slope(coord_65_45_jul_min$tmin_jul)$p.value)
+     )
+
+plot(coord_65_45_nov_max$year_nov,coord_65_45_nov_max$tmax_nov,t="l",
+     main=paste(
+       sens.slope(coord_65_45_nov_max$tmax_nov)$estimates, 
+       sens.slope(coord_65_45_nov_max$tmax_nov)$p.value)
+     )
+
+plot(coord_60_45_fev_min$year_fev, coord_60_45_fev_min$tmin_fev, t="l",
+     main=paste(
+       sens.slope(coord_60_45_fev_min$tmin_fev)$estimates, 
+       sens.slope(coord_60_45_fev_min$tmin_fev)$p.value)
+     )
+
+plot(coord_54_45_jan_min$year_54_45, coord_54_45_jan_min$TminJFM, t="l",
+     main=paste(
+       sens.slope(coord_54_45_jan_min$TminJFM)$estimates, 
+       sens.slope(coord_54_45_jan_min$TminJFM)$p.value)
+     )
+
+plot(coord_54_45_fev_min$year_54_45, coord_54_45_fev_min$TminJFM, t="l",
+     main=paste(
+       sens.slope(coord_54_45_fev_min$TminJFM)$estimates, 
+       sens.slope(coord_54_45_fev_min$TminJFM)$p.value)
+     )
+
+plot(coord_54_45_mar_min$year_54_45, coord_54_45_mar_min$TminJFM, t="l",
+     main=paste(
+       sens.slope(coord_54_45_mar_min$TminJFM)$estimates, 
+       sens.slope(coord_54_45_mar_min$TminJFM)$p.value)
+     )
+
+plot(coord_54_45_mean_min$year_54_45, coord_54_45_mean_min$`mean(TminJFM)`, t="l",
+     main=paste(
+       sens.slope(coord_54_45_mean_min$`mean(TminJFM)`)$estimates, 
+       sens.slope(coord_54_45_mean_min$`mean(TminJFM)`)$p.value)
+     )
 ```
 
 
