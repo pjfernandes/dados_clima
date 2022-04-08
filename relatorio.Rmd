@@ -1,0 +1,148 @@
+---
+title: "Relatório"
+author: "Pedro"
+date: "07/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Kendall)
+library(trend)
+library(xlsx)
+library(plotly)
+library(dplyr)
+
+arquivos<-dir(pattern=".xlsx$")
+
+coord_69_45<-read.xlsx(arquivos[1], 1)
+coord_65_45<-read.xlsx(arquivos[1], 2)
+coord_60_45<-read.xlsx(arquivos[1], 3)
+coord_54_45<-read.xlsx(arquivos[1], 4)
+
+###############################################69_45
+month_69_45 <- as.numeric(substr(coord_69_45$YEAR,6,7))
+year_69_45 <- as.numeric(substr(coord_69_45$YEAR,1,4))
+coord_69_45 <- cbind(coord_69_45, month_69_45, year_69_45)
+coord_69_45 <- coord_69_45[complete.cases(coord_69_45),]
+
+coord_69_45_jun_min <- coord_69_45 %>% filter(month_69_45==6) %>% select(TminJJA, month_69_45, year_69_45)
+coord_69_45_jul_min <- coord_69_45 %>% filter(month_69_45==7) %>% select(TminJJA, month_69_45, year_69_45)
+coord_69_45_ago_min <- coord_69_45 %>% filter(month_69_45==8) %>% select(TminJJA, month_69_45, year_69_45)
+coord_69_45_mean_min <- coord_69_45 %>% select(TminJJA, month_69_45, year_69_45) %>% group_by(year_69_45) %>% summarise(mean(TminJJA))
+
+######################################################65_45
+month_1_65_45<-as.numeric(substr(coord_65_45$YEAR,6,7))
+year_1_65_45<-as.numeric(substr(coord_65_45$YEAR,1,4))
+coord_65_45_1<-data.frame(coord_65_45[,"TminJFM"], month_1_65_45, year_1_65_45)
+coord_65_45_1<-coord_65_45_1[complete.cases(coord_65_45_1),]
+names(coord_65_45_1) <- c("TminJFM", "month_1_65_45", "year_1_65_45")   
+
+coord_65_45_jan_min<-coord_65_45_1 %>% filter(month_1_65_45==1) %>% select(TminJFM, month_1_65_45, year_1_65_45)
+coord_65_45_fev_min<-coord_65_45_1 %>% filter(month_1_65_45==2) %>% select(TminJFM, month_1_65_45, year_1_65_45)
+coord_65_45_mar_min<-coord_65_45_1 %>% filter(month_1_65_45==3) %>% select(TminJFM, month_1_65_45, year_1_65_45)
+coord_65_45_mean_min <- coord_65_45_1 %>% select(TminJFM, month_1_65_45, year_1_65_45) %>% group_by(year_1_65_45) %>% summarise(mean(TminJFM))
+
+year_abr<-as.numeric(substr(coord_65_45$YEAR.1, 1, 4))
+tmax_abr<-coord_65_45$TMaxAbr
+tmax_abr<-data.frame(year_abr, tmax_abr)
+coord_65_45_abr_max<-tmax_abr[complete.cases(tmax_abr),]
+
+#year_jul<-as.numeric(substr(coord_65_45$YEAR.2, 1, 4))
+#tmin_jul<-coord_65_45$TminJul
+#tmin_jul<-data.frame(year_jul, tmin_jul)
+#coord_65_45_jul_min<-tmin_jul[complete.cases(tmin_jul),]
+
+year_jul<-as.numeric(substr(coord_65_45$YEAR.2, 1, 4))
+tmin_jul<-coord_65_45$TminJul
+tmin_jul<-data.frame(year_jul, tmin_jul)
+coord_65_45_jul_min<-tmin_jul[complete.cases(tmin_jul),]
+
+year_nov<-as.numeric(substr(coord_65_45$YEAR.3, 1, 4))
+tmax_nov<-coord_65_45$TMaxNov
+tmax_nov<-data.frame(year_nov, tmax_nov)
+coord_65_45_nov_max<-tmax_nov[complete.cases(tmax_nov),]
+
+######################################################60_45
+year_fev<-as.numeric(substr(coord_60_45$YEAR, 1, 4))
+tmin_fev<-coord_60_45$TminFev
+tmin_fev<-data.frame(year_fev, tmin_fev)
+coord_60_45_fev_min<-tmin_fev[complete.cases(tmin_fev),]
+
+###############################################54_45
+month_54_45 <- as.numeric(substr(coord_54_45$YEAR,6,7))
+year_54_45 <- as.numeric(substr(coord_54_45$YEAR,1,4))
+coord_54_45 <- data.frame(coord_54_45$TminJFM, month_54_45, year_54_45)
+coord_54_45 <- coord_54_45[complete.cases(coord_54_45),]
+names(coord_54_45)<-c("TminJFM","month_54_45","year_54_45")
+
+coord_54_45_jan_min <- coord_54_45 %>% filter(month_54_45==1) %>% select(TminJFM, month_54_45, year_54_45)
+coord_54_45_fev_min <- coord_54_45 %>% filter(month_54_45==2) %>% select(TminJFM, month_54_45, year_54_45)
+coord_54_45_mar_min <- coord_54_45 %>% filter(month_54_45==3) %>% select(TminJFM, month_54_45, year_54_45)
+coord_54_45_mean_min <- coord_54_45 %>% select(TminJFM, month_54_45, year_54_45) %>% group_by(year_54_45) %>% summarise(mean(TminJFM))
+
+
+```
+
+## Mann-Kendall
+```{r, echo=TRUE}
+MannKendall(coord_69_45_jun_min$TminJJA)
+MannKendall(coord_69_45_jul_min$TminJJA)
+MannKendall(coord_69_45_ago_min$TminJJA)
+MannKendall(coord_69_45_mean_min$`mean(TminJJA)`)
+
+MannKendall(coord_65_45_jan_min$TminJFM)
+MannKendall(coord_65_45_fev_min$TminJFM)
+MannKendall(coord_65_45_mar_min$TminJFM)
+MannKendall(coord_65_45_mean_min$`mean(TminJFM)`)
+
+MannKendall(coord_65_45_abr_max$tmax_abr)
+
+MannKendall(coord_65_45_abr_max$tmax_abr)
+
+MannKendall(coord_65_45_jul_min$tmin_jul)
+
+MannKendall(coord_65_45_nov_max$tmax_nov)
+
+MannKendall(coord_60_45_fev_min$tmin_fev)
+
+MannKendall(coord_54_45_jan_min$TminJFM)
+MannKendall(coord_54_45_fev_min$TminJFM)
+MannKendall(coord_54_45_mar_min$TminJFM)
+MannKendall(coord_54_45_mean_min$`mean(TminJFM)`)
+```
+## Theil-Sen
+```{r, echo=FALSE}
+sens.slope(coord_69_45_jun_min$TminJJA)
+sens.slope(coord_69_45_jul_min$TminJJA)
+sens.slope(coord_69_45_ago_min$TminJJA)
+sens.slope(coord_69_45_mean_min$`mean(TminJJA)`)
+
+sens.slope(coord_65_45_jan_min$TminJFM)
+sens.slope(coord_65_45_fev_min$TminJFM)
+sens.slope(coord_65_45_mar_min$TminJFM)
+sens.slope(coord_65_45_mean_min$`mean(TminJFM)`)
+
+sens.slope(coord_65_45_abr_max$tmax_abr)
+
+sens.slope(coord_65_45_abr_max$tmax_abr)
+
+sens.slope(coord_65_45_jul_min$tmin_jul)
+
+sens.slope(coord_65_45_nov_max$tmax_nov)
+
+sens.slope(coord_60_45_fev_min$tmin_fev)
+
+sens.slope(coord_54_45_jan_min$TminJFM)
+sens.slope(coord_54_45_fev_min$TminJFM)
+sens.slope(coord_54_45_mar_min$TminJFM)
+sens.slope(coord_54_45_mean_min$`mean(TminJFM)`)
+```
+
+##Plots
+
+```{r , echo=FALSE}
+#plot(pressure)
+```
+
+
