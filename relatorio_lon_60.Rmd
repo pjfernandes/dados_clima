@@ -1,0 +1,187 @@
+---
+title: "Relatório Longitude -45"
+author: "Pedro"
+date: "11/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Kendall)
+library(trend)
+library(xlsx)
+library(plotly)
+library(dplyr)
+
+arquivos<-dir(pattern=".xlsx$")
+
+coord_69_60<-read.xlsx(arquivos[2], 1)
+coord_65_60<-read.xlsx(arquivos[2], 2)
+coord_60_60<-read.xlsx(arquivos[2], 3)
+coord_54_60<-read.xlsx(arquivos[2], 4)
+
+###############################################69_60
+month_69_60 <- as.numeric(substr(coord_69_60$YEAR,6,7))
+year_69_60 <- as.numeric(substr(coord_69_60$YEAR,1,4))
+coord_69_60 <- cbind(coord_69_60, month_69_60, year_69_60)
+coord_69_60 <- coord_69_60[complete.cases(coord_69_60),]
+
+coord_69_60_set_min <- coord_69_60 %>% filter(month_69_60==9) %>% select(TminSO, month_69_60, year_69_60)
+coord_69_60_out_min <- coord_69_60 %>% filter(month_69_60==10) %>% select(TminSO, month_69_60, year_69_60)
+
+coord_69_60_mean_min <- coord_69_60 %>% select(TminSO, month_69_60, year_69_60) %>% group_by(year_69_60) %>% summarise(mean(TminSO))
+
+year_fev<-as.numeric(substr(coord_69_60$YEAR.1, 1, 4))
+tmax_fev<-coord_69_60$TMaxFEV
+tmax_fev<-data.frame(year_fev, tmax_fev)
+coord_69_60_fev_max<-tmax_fev[complete.cases(tmax_fev),]
+
+year_jul<-as.numeric(substr(coord_69_60$YEAR.2, 1, 4))
+tmax_jul<-coord_69_60$TMaxJUL
+tmax_jul<-data.frame(year_jul, tmax_jul)
+coord_69_60_jul_max<-tmax_jul[complete.cases(tmax_jul),]
+
+######################################################65_60
+month_65_60 <- as.numeric(substr(coord_65_60$YEAR,6,7))
+year_65_60 <- as.numeric(substr(coord_65_60$YEAR,1,4))
+coord_65_60 <- cbind(coord_65_60, month_65_60, year_65_60)
+coord_65_60 <- coord_65_60[complete.cases(coord_65_60),]
+
+coord_65_60_fev_max <- coord_65_60 %>% filter(month_65_60==2) %>% select(TMaxFM, month_65_60, year_65_60)
+coord_65_60_mar_max <- coord_65_60 %>% filter(month_65_60==3) %>% select(TMaxFM, month_65_60, year_65_60)
+
+coord_65_60_mean_max <- coord_65_60 %>% select(TMaxFM, month_65_60, year_65_60) %>% group_by(year_65_60) %>% summarise(mean(TMaxFM))
+
+###############################################60_60
+month_60_60 <- as.numeric(substr(coord_60_60$YEAR,6,7))
+year_60_60 <- as.numeric(substr(coord_60_60$YEAR,1,4))
+coord_60_60 <- cbind(coord_60_60, month_60_60, year_60_60)
+coord_60_60 <- coord_60_60[complete.cases(coord_60_60),]
+
+coord_60_60_jul_max <- coord_60_60 %>% filter(month_60_60==7) %>% select(TMaxJAS, month_60_60, year_60_60)
+coord_60_60_ago_max <- coord_60_60 %>% filter(month_60_60==8) %>% select(TMaxJAS, month_60_60, year_60_60)
+coord_60_60_set_max <- coord_60_60 %>% filter(month_60_60==9) %>% select(TMaxJAS, month_60_60, year_60_60)
+
+coord_60_60_mean_max <- coord_60_60 %>% select(TMaxJAS, month_60_60, year_60_60) %>% group_by(year_60_60) %>% summarise(mean(TMaxJAS))
+
+year_dez<-as.numeric(substr(coord_60_60$YEAR.1, 1, 4))
+tmax_dez<-coord_60_60$TMaxDEZ
+tmax_dez<-data.frame(year_dez, tmax_dez)
+coord_60_60_dez_max<-tmax_dez[complete.cases(tmax_dez),]
+
+######################################################54_60
+month_54_60 <- as.numeric(substr(coord_54_60$YEAR,6,7))
+year_54_60 <- as.numeric(substr(coord_54_60$YEAR,1,4))
+coord_54_60 <- cbind(coord_54_60, month_54_60, year_54_60)
+coord_54_60 <- coord_54_60[complete.cases(coord_54_60),]
+
+coord_54_60_dez_min <- coord_54_60 %>% filter(month_54_60==12) %>% select(TminDJ, month_54_60, year_54_60)
+coord_54_60_jan_min <- coord_54_60 %>% filter(month_54_60==1) %>% select(TminDJ, month_54_60, year_54_60)
+
+coord_54_60_mean_min <- coord_54_60 %>% select(TminDJ, month_54_60, year_54_60) %>% group_by(year_54_60) %>% summarise(mean(TminDJ))
+
+year_ago<-as.numeric(substr(coord_54_60$NA., 1, 4))
+tmax_ago<-coord_54_60$TMaxAGO
+tmax_ago<-data.frame(year_ago, tmax_ago)
+coord_54_60_ago_max<-tmax_ago[complete.cases(tmax_ago),]
+
+```
+
+## Mann-Kendall
+```{r, echo=TRUE}
+MannKendall(coord_69_60_set_min$TminSO)
+MannKendall(coord_69_60_out_min$TminSO)
+MannKendall(coord_69_60_mean_min$`mean(TminSO)`)
+MannKendall(coord_69_60_fev_max$tmax_fev)
+MannKendall(coord_69_60_jul_max$tmax_jul)
+
+MannKendall(coord_65_60_fev_max$TMaxFM)
+MannKendall(coord_65_60_mar_max$TMaxFM)
+
+MannKendall(coord_60_60_jul_max$TMaxJAS)
+MannKendall(coord_60_60_ago_max$TMaxJAS)
+MannKendall(coord_60_60_set_max$TMaxJAS)
+MannKendall(coord_60_60_mean_max$`mean(TMaxJAS)`)
+MannKendall(coord_60_60_dez_max$tmax_dez)
+
+MannKendall(coord_54_60_dez_min$TminDJ)
+MannKendall(coord_54_60_jan_min$TminDJ)
+MannKendall(coord_54_60_mean_min$`mean(TminDJ)`)
+MannKendall(coord_54_60_ago_max$tmax_ago)
+
+```
+## Theil-Sen
+```{r, echo=FALSE}
+sens.slope(coord_69_60_set_min$TminSO)
+sens.slope(coord_69_60_out_min$TminSO)
+sens.slope(coord_69_60_mean_min$`mean(TminSO)`)
+sens.slope(coord_69_60_fev_max$tmax_fev)
+sens.slope(coord_69_60_jul_max$tmax_jul)
+
+sens.slope(coord_65_60_fev_max$TMaxFM)
+sens.slope(coord_65_60_mar_max$TMaxFM)
+
+sens.slope(coord_60_60_jul_max$TMaxJAS)
+sens.slope(coord_60_60_ago_max$TMaxJAS)
+sens.slope(coord_60_60_set_max$TMaxJAS)
+sens.slope(coord_60_60_mean_max$`mean(TMaxJAS)`)
+sens.slope(coord_60_60_dez_max$tmax_dez)
+
+sens.slope(coord_54_60_dez_min$TminDJ)
+sens.slope(coord_54_60_jan_min$TminDJ)
+sens.slope(coord_54_60_mean_min$`mean(TminDJ)`)
+sens.slope(coord_54_60_ago_max$tmax_ago)
+```
+
+## Plots
+
+```{r , echo=FALSE}
+plot(coord_69_60_set_min$year_69_60, coord_69_60_set_min$TminSO, t="l",
+     main=paste(sens.slope(coord_69_60_set_min$TminSO)$estimates, sens.slope(coord_69_60_set_min$TminSO)$p.value))
+
+plot(coord_69_60_out_min$year_69_60, coord_69_60_out_min$TminSO, t="l",
+     main=paste(sens.slope(coord_69_60_out_min$TminSO)$estimates, sens.slope(coord_69_60_out_min$TminSO)$p.value))
+
+plot(coord_69_60_mean_min$year_69_60, coord_69_60_mean_min$`mean(TminSO)`, t="l",
+     main=paste(sens.slope(coord_69_60_mean_min$`mean(TminSO)`)$estimates, sens.slope(coord_69_60_mean_min$`mean(TminSO)`)$p.value))
+
+plot(coord_69_60_fev_max$year_fev, coord_69_60_fev_max$tmax_fev, t="l",
+     main=paste(sens.slope(coord_69_60_fev_max$tmax_fev)$estimates, sens.slope(coord_69_60_fev_max$tmax_fev)$p.value))
+
+plot(coord_69_60_jul_max$year_jul, coord_69_60_jul_max$tmax_jul, t="l",
+     main=paste(sens.slope(coord_69_60_jul_max$tmax_jul)$estimates, sens.slope(coord_69_60_jul_max$tmax_jul)$p.value))
+
+plot(coord_65_60_fev_max$year_65_60, coord_65_60_fev_max$TMaxFM, t="l",
+     main=paste(sens.slope(coord_65_60_fev_max$TMaxFM)$estimates, sens.slope(coord_65_60_fev_max$TMaxFM)$p.value))
+
+plot(coord_65_60_fev_max$year_65_60, coord_65_60_fev_max$TMaxFM, t="l",
+     main=paste(sens.slope(coord_65_60_fev_max$TMaxFM)$estimates, sens.slope(coord_65_60_fev_max$TMaxFM)$p.value))
+
+plot(coord_65_60_mar_max$year_65_60, coord_65_60_mar_max$TMaxFM, t="l",
+     main=paste(sens.slope(coord_65_60_mar_max$TMaxFM)$estimates, sens.slope(coord_65_60_mar_max$TMaxFM)$p.value))
+
+plot(coord_60_60_jul_max$year_60_60, coord_60_60_jul_max$TMaxJAS, t="l",
+     main=paste(sens.slope(coord_60_60_jul_max$TMaxJAS)$estimates, sens.slope(coord_60_60_jul_max$TMaxJAS)$p.value))
+
+plot(coord_60_60_ago_max$year_60_60, coord_60_60_ago_max$TMaxJAS, t="l",
+     main=paste(sens.slope(coord_60_60_ago_max$TMaxJAS)$estimates, sens.slope(coord_60_60_ago_max$TMaxJAS)$p.value))
+
+plot(coord_60_60_set_max$year_60_60, coord_60_60_set_max$TMaxJAS, t="l",
+     main=paste(sens.slope(coord_60_60_set_max$TMaxJAS)$estimates, sens.slope(coord_60_60_set_max$TMaxJAS)$p.value))
+
+plot(coord_60_60_mean_max$year_60_60, coord_60_60_mean_max$`mean(TMaxJAS)`, t="l",
+     main=paste(sens.slope(coord_60_60_mean_max$`mean(TMaxJAS)`)$estimates, sens.slope(coord_60_60_mean_max$`mean(TMaxJAS)`)$p.value))
+
+plot(coord_60_60_dez_max$year_dez, coord_60_60_dez_max$tmax_dez, t="l",
+     main=paste(sens.slope(coord_60_60_dez_max$tmax_dez)$estimates, sens.slope(coord_60_60_dez_max$tmax_dez)$p.value))
+
+plot(coord_54_60_jan_min$year_54_60, coord_54_60_jan_min$TminDJ, t="l",
+     main=paste(sens.slope(coord_54_60_jan_min$TminDJ)$estimates, sens.slope(coord_54_60_jan_min$TminDJ)$p.value))
+
+plot(coord_54_60_ago_max$year_ago, coord_54_60_ago_max$tmax_ago, t="l",
+     main=paste(sens.slope(coord_54_60_ago_max$tmax_ago)$estimates, sens.slope(coord_54_60_ago_max$tmax_ago)$p.value))
+
+
+```
+
+
